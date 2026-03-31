@@ -410,6 +410,9 @@ function App() {
             </button>
           ))}
         </nav>
+        <span className="nav-more-hint" aria-hidden="true">
+          More ->
+        </span>
 
         <button type="button" className="theme-toggle" onClick={() => setIsDarkMode((current) => !current)}>
           {isDarkMode ? 'Light' : 'Dark'}

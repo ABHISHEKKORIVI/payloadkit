@@ -40,6 +40,15 @@ function Base64Tool({
           {base64Error ? <p className="error-text">{base64Error}</p> : null}
         </div>
 
+        <div className="mobile-action-row">
+          <button type="button" onClick={onEncode}>
+            Encode
+          </button>
+          <button type="button" className="secondary-button" onClick={onDecode}>
+            Decode
+          </button>
+        </div>
+
         <div className="output-block">
           <div className="output-header">
             <span>Output</span>

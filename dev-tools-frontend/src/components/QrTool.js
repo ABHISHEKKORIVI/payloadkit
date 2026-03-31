@@ -32,6 +32,15 @@ function QrTool({ qrInput, qrDataUrl, qrError, onQrInputChange, onCopy }) {
           {qrError ? <p className="error-text">{qrError}</p> : null}
         </div>
 
+        <div className="mobile-action-row">
+          <button type="button" className="secondary-button" onClick={() => onCopy(qrInput, 'QR source text')}>
+            Copy Text
+          </button>
+          <a className="ghost-link" href={qrDataUrl} download="payloadkit-qr.png">
+            Download PNG
+          </a>
+        </div>
+
         <div className="qr-preview">
           {qrDataUrl ? <img src={qrDataUrl} alt="Generated QR code" /> : <p>No QR code yet.</p>}
         </div>

@@ -62,6 +62,14 @@ body {
   margin-left: auto;
 }
 
+.nav-more-hint {
+  display: none;
+  color: var(--accent);
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .topnav {
   display: flex;
   flex-wrap: wrap;
@@ -405,6 +413,11 @@ textarea:focus {
   gap: 10px;
 }
 
+.mobile-action-row {
+  display: none;
+  gap: 10px;
+}
+
 button,
 .ghost-link {
   border: none;
@@ -602,6 +615,12 @@ button:hover,
     width: 100%;
   }
 
+  .nav-more-hint {
+    display: inline-flex;
+    align-self: flex-end;
+    margin-top: -6px;
+  }
+
   .nav-link {
     width: auto;
     flex: 0 0 auto;
@@ -641,6 +660,22 @@ button:hover,
   .tool-layout,
   .why-grid {
     grid-template-columns: 1fr;
+  }
+
+  .page-header > .button-row,
+  .page-header > button,
+  .page-header > .ghost-link {
+    display: none;
+  }
+
+  .mobile-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .mobile-action-row > * {
+    flex: 1 1 0;
   }
 
   .hero-card h2 {

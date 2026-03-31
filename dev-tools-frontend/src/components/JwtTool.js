@@ -29,6 +29,12 @@ function JwtTool({ jwtInput, jwtHeader, jwtPayload, jwtError, jwtStatus, onJwtIn
         {jwtError ? <p className="error-text">{jwtError}</p> : null}
       </div>
 
+      <div className="mobile-action-row">
+        <button type="button" onClick={onDecodeJwt}>
+          Decode JWT
+        </button>
+      </div>
+
       <div className="tool-grid">
         <div className="output-block">
           <div className="output-header">

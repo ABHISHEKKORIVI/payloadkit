@@ -42,6 +42,15 @@ function JsonTool({
           {jsonError ? <p className="error-text">{jsonError}</p> : null}
         </div>
 
+        <div className="mobile-action-row">
+          <button type="button" onClick={onFormatJson}>
+            Format JSON
+          </button>
+          <button type="button" className="secondary-button" onClick={onDownloadJson}>
+            Download JSON
+          </button>
+        </div>
+
         <div className="output-block">
           <div className="output-header">
             <span>Formatted Output</span>

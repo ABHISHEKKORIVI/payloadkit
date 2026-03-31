@@ -139,6 +139,37 @@ function App() {
     }
   };
 
+  const handleGenerateQr = () => {
+    if (!qrInput.trim()) {
+      setQrDataUrl('');
+      setQrError('Enter text or a URL to generate a QR code.');
+      return;
+    }
+
+    if (process.env.NODE_ENV === 'test') {
+      setQrDataUrl('data:image/png;base64,test');
+      setQrError('');
+      return;
+    }
+
+    createQrCode(qrInput, {
+      width: 320,
+      margin: 2,
+      color: {
+        dark: '#102542',
+        light: '#f6f4ee',
+      },
+    })
+      .then((url) => {
+        setQrDataUrl(url);
+        setQrError('');
+      })
+      .catch((error) => {
+        setQrDataUrl('');
+        setQrError(error.message);
+      });
+  };
+
   const handleBase64Encode = () => {
     try {
       setBase64Output(encodeBase64(base64Input));
@@ -204,51 +235,6 @@ function App() {
       setJwtError(error.message);
     }
   }, [jwtInput]);
-
-  useEffect(() => {
-    let isActive = true;
-
-    if (!qrInput.trim()) {
-      setQrDataUrl('');
-      setQrError('Enter text or a URL to generate a QR code.');
-      return undefined;
-    }
-
-    if (process.env.NODE_ENV === 'test') {
-      setQrDataUrl('data:image/png;base64,test');
-      setQrError('');
-      return undefined;
-    }
-
-    createQrCode(qrInput, {
-      width: 320,
-      margin: 2,
-      color: {
-        dark: '#102542',
-        light: '#f6f4ee',
-      },
-    })
-      .then((url) => {
-        if (!isActive) {
-          return;
-        }
-
-        setQrDataUrl(url);
-        setQrError('');
-      })
-      .catch((error) => {
-        if (!isActive) {
-          return;
-        }
-
-        setQrDataUrl('');
-        setQrError(error.message);
-      });
-
-    return () => {
-      isActive = false;
-    };
-  }, [qrInput]);
 
   useEffect(() => {
     if (!copyStatus) {
@@ -379,7 +365,15 @@ function App() {
           />
         );
       case 'qr':
-        return <QrTool qrInput={qrInput} qrDataUrl={qrDataUrl} qrError={qrError} onQrInputChange={setQrInput} onCopy={runCopy} />;
+        return (
+          <QrTool
+            qrInput={qrInput}
+            qrDataUrl={qrDataUrl}
+            qrError={qrError}
+            onQrInputChange={setQrInput}
+            onGenerateQr={handleGenerateQr}
+          />
+        );
       case 'base64':
         return (
           <Base64Tool

@@ -1,4 +1,4 @@
-function QrTool({ qrInput, qrDataUrl, qrError, onQrInputChange, onCopy }) {
+function QrTool({ qrInput, qrDataUrl, qrError, onQrInputChange, onGenerateQr }) {
   return (
     <section className="page-panel">
       <div className="page-header">
@@ -11,8 +11,8 @@ function QrTool({ qrInput, qrDataUrl, qrError, onQrInputChange, onCopy }) {
           </p>
         </div>
         <div className="button-row">
-          <button type="button" className="secondary-button" onClick={() => onCopy(qrInput, 'QR source text')}>
-            Copy Text
+          <button type="button" onClick={onGenerateQr}>
+            Generate QR
           </button>
           <a className="ghost-link" href={qrDataUrl} download="payloadkit-qr.png">
             Download PNG
@@ -33,8 +33,8 @@ function QrTool({ qrInput, qrDataUrl, qrError, onQrInputChange, onCopy }) {
         </div>
 
         <div className="mobile-action-row">
-          <button type="button" className="secondary-button" onClick={() => onCopy(qrInput, 'QR source text')}>
-            Copy Text
+          <button type="button" onClick={onGenerateQr}>
+            Generate QR
           </button>
           <a className="ghost-link" href={qrDataUrl} download="payloadkit-qr.png">
             Download PNG

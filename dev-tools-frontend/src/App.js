@@ -140,7 +140,7 @@ function App() {
   const handleBase64Encode = () => {
     try {
       setBase64Output(encodeBase64(base64Input));
-      setBase64Error('');
+      setBase64Error(''); // update
     } catch (error) {
       setBase64Output('');
       setBase64Error(error.message);

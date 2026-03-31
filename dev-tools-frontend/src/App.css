@@ -574,7 +574,7 @@ button:hover,
 
 @media (max-width: 680px) {
   .app-shell {
-    padding-inline: 14px;
+    padding: 12px 12px 40px;
   }
 
   .topbar,
@@ -582,21 +582,33 @@ button:hover,
   .page-panel,
   .input-panel,
   .hero-card {
-    padding: 18px;
+    padding: 16px;
   }
 
   .topnav {
     width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .topnav::-webkit-scrollbar {
+    display: none;
   }
 
   .theme-toggle {
     margin-left: 0;
+    width: 100%;
   }
 
-  .nav-link,
+  .nav-link {
+    width: auto;
+    flex: 0 0 auto;
+  }
+
   button,
   .ghost-link {
-    width: 100%;
     text-align: center;
     justify-content: center;
   }
@@ -607,6 +619,7 @@ button:hover,
 
   .hero-actions {
     width: 100%;
+    flex-direction: column;
   }
 
   .hero-copy h1 {
@@ -619,11 +632,27 @@ button:hover,
     max-width: 100%;
   }
 
+  .trust-line {
+    text-align: center;
+  }
+
   .hero-grid,
   .tool-grid,
   .tool-layout,
   .why-grid {
     grid-template-columns: 1fr;
+  }
+
+  .hero-card h2 {
+    font-size: 1.2rem;
+  }
+
+  textarea {
+    min-height: 180px;
+  }
+
+  .page-header {
+    gap: 14px;
   }
 
   .output-header {

@@ -64,10 +64,17 @@ body {
 
 .nav-more-hint {
   display: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(235, 94, 40, 0.12);
+  background: rgba(235, 94, 40, 0.08);
   color: var(--accent);
-  font-size: 0.86rem;
-  font-weight: 700;
-  white-space: nowrap;
+  font-size: 0.9rem;
+  flex: 0 0 auto;
 }
 
 .topnav {
@@ -590,12 +597,24 @@ button:hover,
     padding: 12px 12px 40px;
   }
 
-  .topbar,
+  .topbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+  }
+
   .hero-copy,
   .page-panel,
   .input-panel,
-  .hero-card {
+  .hero-card,
+  .topbar {
     padding: 16px;
+  }
+
+  .brand-mark,
+  .theme-toggle {
+    grid-column: 1 / -1;
   }
 
   .topnav {
@@ -604,6 +623,7 @@ button:hover,
     overflow-x: auto;
     padding-bottom: 4px;
     scrollbar-width: none;
+    grid-column: 1 / 2;
   }
 
   .topnav::-webkit-scrollbar {
@@ -617,8 +637,9 @@ button:hover,
 
   .nav-more-hint {
     display: inline-flex;
-    align-self: flex-end;
-    margin-top: -6px;
+    align-self: center;
+    justify-self: end;
+    margin-top: 0;
   }
 
   .nav-link {
@@ -630,6 +651,12 @@ button:hover,
   .ghost-link {
     text-align: center;
     justify-content: center;
+  }
+
+  .nav-more-hint {
+    width: 28px;
+    height: 28px;
+    padding: 0;
   }
 
   .button-row {

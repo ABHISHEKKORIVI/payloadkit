@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaCode, FaKey, FaQrcode, FaExchangeAlt } from 'react-icons/fa';
+import { FiChevronRight } from 'react-icons/fi';
 import Base64Tool from './components/Base64Tool';
 import JsonTool from './components/JsonTool';
 import JwtTool from './components/JwtTool';
@@ -85,6 +86,7 @@ function App() {
   const [base64Error, setBase64Error] = useState('');
 
   const [copyStatus, setCopyStatus] = useState('');
+  const [navElement, setNavElement] = useState(null);
 
   const runCopy = async (value, label) => {
     try {
@@ -270,6 +272,17 @@ function App() {
     setActivePage(page);
   };
 
+  const scrollToolNav = () => {
+    if (!navElement) {
+      return;
+    }
+
+    navElement.scrollBy({
+      left: 220,
+      behavior: 'smooth',
+    });
+  };
+
   const renderHome = () => (
     <section className="home-page">
       <div className="hero-copy home-hero">
@@ -391,7 +404,7 @@ function App() {
           {BRAND_NAME}
         </button>
 
-        <nav className="topnav" aria-label="Primary navigation">
+        <nav className="topnav" aria-label="Primary navigation" ref={setNavElement}>
           <button
             type="button"
             className={activePage === 'home' ? 'nav-link active' : 'nav-link'}
@@ -410,9 +423,9 @@ function App() {
             </button>
           ))}
         </nav>
-        <span className="nav-more-hint" aria-hidden="true">
-          More ->
-        </span>
+        <button type="button" className="nav-more-hint" aria-label="Scroll to more tools" onClick={scrollToolNav}>
+          <FiChevronRight />
+        </button>
 
         <button type="button" className="theme-toggle" onClick={() => setIsDarkMode((current) => !current)}>
           {isDarkMode ? 'Light' : 'Dark'}

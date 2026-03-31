@@ -1,17 +1,8 @@
 {
-  "builds": [
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
+      "source": "/((?!static/|favicon.ico|manifest.json|logo192.png|logo512.png|asset-manifest.json|robots.txt).*)",
+      "destination": "/index.html"
     }
   ]
 }

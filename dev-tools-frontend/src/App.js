@@ -170,6 +170,12 @@ function App() {
       });
   };
 
+  const handleQrInputChange = (value) => {
+    setQrInput(value);
+    setQrDataUrl('');
+    setQrError('');
+  };
+
   const handleBase64Encode = () => {
     try {
       setBase64Output(encodeBase64(base64Input));
@@ -364,16 +370,16 @@ function App() {
             onCopy={runCopy}
           />
         );
-      case 'qr':
-        return (
-          <QrTool
-            qrInput={qrInput}
-            qrDataUrl={qrDataUrl}
-            qrError={qrError}
-            onQrInputChange={setQrInput}
-            onGenerateQr={handleGenerateQr}
-          />
-        );
+        case 'qr':
+          return (
+            <QrTool
+              qrInput={qrInput}
+              qrDataUrl={qrDataUrl}
+              qrError={qrError}
+              onQrInputChange={handleQrInputChange}
+              onGenerateQr={handleGenerateQr}
+            />
+          );
       case 'base64':
         return (
           <Base64Tool
@@ -398,28 +404,30 @@ function App() {
           {BRAND_NAME}
         </button>
 
-        <nav className="topnav" aria-label="Primary navigation" ref={setNavElement}>
-          <button
-            type="button"
-            className={activePage === 'home' ? 'nav-link active' : 'nav-link'}
-            onClick={() => navigateTo('home')}
-          >
-            Home
-          </button>
-          {tools.map((tool) => (
+        <div className="nav-scroll-wrap">
+          <nav className="topnav" aria-label="Primary navigation" ref={setNavElement}>
             <button
               type="button"
-              key={tool.id}
-              className={activePage === tool.id ? 'nav-link active' : 'nav-link'}
-              onClick={() => navigateTo(tool.id)}
+              className={activePage === 'home' ? 'nav-link active' : 'nav-link'}
+              onClick={() => navigateTo('home')}
             >
-              {tool.navLabel}
+              Home
             </button>
-          ))}
-        </nav>
-        <button type="button" className="nav-more-hint" aria-label="Scroll to more tools" onClick={scrollToolNav}>
-          <FiChevronRight />
-        </button>
+            {tools.map((tool) => (
+              <button
+                type="button"
+                key={tool.id}
+                className={activePage === tool.id ? 'nav-link active' : 'nav-link'}
+                onClick={() => navigateTo(tool.id)}
+              >
+                {tool.navLabel}
+              </button>
+            ))}
+          </nav>
+          <button type="button" className="nav-more-hint" aria-label="Scroll to more tools" onClick={scrollToolNav}>
+            <FiChevronRight />
+          </button>
+        </div>
 
         <button type="button" className="theme-toggle" onClick={() => setIsDarkMode((current) => !current)}>
           {isDarkMode ? 'Light' : 'Dark'}

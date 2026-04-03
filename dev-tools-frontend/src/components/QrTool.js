@@ -1,4 +1,16 @@
 function QrTool({ qrInput, qrDataUrl, qrError, onQrInputChange, onGenerateQr }) {
+  const isDownloadDisabled = !qrDataUrl;
+  const renderDownloadAction = () =>
+    isDownloadDisabled ? (
+      <button type="button" className="ghost-link disabled-link" disabled>
+        Download PNG
+      </button>
+    ) : (
+      <a className="ghost-link" href={qrDataUrl} download="payloadkit-qr.png">
+        Download PNG
+      </a>
+    );
+
   return (
     <section className="page-panel">
       <div className="page-header">
@@ -14,9 +26,7 @@ function QrTool({ qrInput, qrDataUrl, qrError, onQrInputChange, onGenerateQr }) 
           <button type="button" onClick={onGenerateQr}>
             Generate QR
           </button>
-          <a className="ghost-link" href={qrDataUrl} download="payloadkit-qr.png">
-            Download PNG
-          </a>
+          {renderDownloadAction()}
         </div>
       </div>
 
@@ -36,9 +46,7 @@ function QrTool({ qrInput, qrDataUrl, qrError, onQrInputChange, onGenerateQr }) 
           <button type="button" onClick={onGenerateQr}>
             Generate QR
           </button>
-          <a className="ghost-link" href={qrDataUrl} download="payloadkit-qr.png">
-            Download PNG
-          </a>
+          {renderDownloadAction()}
         </div>
 
         <div className="qr-preview">

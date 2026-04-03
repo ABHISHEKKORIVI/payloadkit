@@ -77,6 +77,10 @@ body {
   flex: 0 0 auto;
 }
 
+.nav-scroll-wrap {
+  display: contents;
+}
+
 .topnav {
   display: flex;
   flex-wrap: wrap;
@@ -449,6 +453,12 @@ button:hover,
   border: 1px solid rgba(16, 37, 66, 0.14);
 }
 
+.disabled-link {
+  pointer-events: none;
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .copy-button {
   padding: 8px 12px;
   background: rgba(16, 37, 66, 0.08);
@@ -617,13 +627,21 @@ button:hover,
     grid-column: 1 / -1;
   }
 
+  .nav-scroll-wrap {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
   .topnav {
     width: 100%;
     flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: 4px;
     scrollbar-width: none;
-    grid-column: 1 / 2;
   }
 
   .topnav::-webkit-scrollbar {

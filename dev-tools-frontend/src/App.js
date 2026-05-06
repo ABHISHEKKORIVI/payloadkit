@@ -1,16 +1,36 @@
 import { useEffect, useState } from 'react';
-import { FaCode, FaKey, FaQrcode, FaExchangeAlt } from 'react-icons/fa';
+import {
+  FaCode,
+  FaExchangeAlt,
+  FaFingerprint,
+  FaKey,
+  FaLink,
+  FaPlayCircle,
+  FaQrcode,
+  FaRandom,
+  FaSearch,
+} from 'react-icons/fa';
 import { FiChevronRight } from 'react-icons/fi';
 import Base64Tool from './components/Base64Tool';
+import HashTool from './components/HashTool';
 import JsonTool from './components/JsonTool';
 import JwtTool from './components/JwtTool';
+import PythonTool from './components/PythonTool';
 import QrTool from './components/QrTool';
+import RegexTool from './components/RegexTool';
+import UrlTool from './components/UrlTool';
+import UuidTool from './components/UuidTool';
 import './App.css';
 import { decodeBase64, encodeBase64 } from './utils/base64';
 import { copyText } from './utils/clipboard';
+import { createHashValue } from './utils/hash';
 import { formatJsonValue } from './utils/json';
 import { parseJwtValue } from './utils/jwt';
+import { loadPythonRuntime, runPythonCode } from './utils/python';
 import { createQrCode } from './utils/qr';
+import { parseRegexFlags, runRegexMatch } from './utils/regex';
+import { decodeUrlValue, encodeUrlValue } from './utils/url';
+import { createUuidBatch } from './utils/uuid';
 
 const BRAND_NAME = 'PayloadKit';
 
@@ -20,6 +40,11 @@ const routeMap = {
   '/jwt-decoder': 'jwt',
   '/qr-generator': 'qr',
   '/base64-tool': 'base64',
+  '/url-encoder': 'url',
+  '/hash-generator': 'hash',
+  '/regex-tester': 'regex',
+  '/uuid-generator': 'uuid',
+  '/python-runner': 'python',
 };
 
 const pageToPath = {
@@ -28,20 +53,25 @@ const pageToPath = {
   jwt: '/jwt-decoder',
   qr: '/qr-generator',
   base64: '/base64-tool',
+  url: '/url-encoder',
+  hash: '/hash-generator',
+  regex: '/regex-tester',
+  uuid: '/uuid-generator',
+  python: '/python-runner',
 };
 
 const tools = [
+  {
+    id: 'python',
+    icon: FaPlayCircle,
+    navLabel: 'Python Compiler',
+    brief: 'Run Python snippets in the browser for quick logic tests, experiments, and debugging work.',
+  },
   {
     id: 'json',
     icon: FaCode,
     navLabel: 'JSON Formatter',
     brief: 'Format, validate, and review JSON payloads with readable syntax highlighting.',
-  },
-  {
-    id: 'jwt',
-    icon: FaKey,
-    navLabel: 'JWT Decoder',
-    brief: 'Inspect JWT headers and claims locally while debugging auth flows.',
   },
   {
     id: 'qr',
@@ -50,10 +80,40 @@ const tools = [
     brief: 'Generate downloadable QR codes for URLs, text, onboarding links, or internal tools.',
   },
   {
+    id: 'uuid',
+    icon: FaRandom,
+    navLabel: 'UUID Generator',
+    brief: 'Generate one or many UUIDs for payloads, seeds, fixtures, and integration testing work.',
+  },
+  {
+    id: 'jwt',
+    icon: FaKey,
+    navLabel: 'JWT Decoder',
+    brief: 'Inspect JWT headers and claims locally while debugging auth flows.',
+  },
+  {
     id: 'base64',
     icon: FaExchangeAlt,
     navLabel: 'Base64 Tool',
     brief: 'Encode or decode text safely for API work, headers, and quick utility tasks.',
+  },
+  {
+    id: 'url',
+    icon: FaLink,
+    navLabel: 'URL Encoder',
+    brief: 'Encode or decode URLs, query strings, and redirect parameters without leaving the browser.',
+  },
+  {
+    id: 'hash',
+    icon: FaFingerprint,
+    navLabel: 'Hash Generator',
+    brief: 'Generate SHA-256 or SHA-512 hashes for payload checks, signatures, and integrity checks.',
+  },
+  {
+    id: 'regex',
+    icon: FaSearch,
+    navLabel: 'Regex Tester',
+    brief: 'Test regular expressions against sample text and inspect matches, groups, and flags locally.',
   },
 ];
 
@@ -62,6 +122,18 @@ const defaultJsonInput =
 const defaultJwtInput =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJQYXlsb2FkS2l0IiwicGxhbiI6InB1YmxpYyIsImlhdCI6MTcwMDAwMDAwMCwiZXhwIjo0MTAyNDQ0ODAwfQ.signature';
 const defaultBase64Input = 'Launch-ready browser utilities for developers.';
+const defaultUrlInput = 'https://payloadkit.app/callback?next=/workspace tools&env=staging';
+const defaultHashInput = 'payloadkit-demo';
+const defaultRegexPattern = 'payloadkit';
+const defaultRegexSample = 'payloadkit-demo\npayloadkit.app\nlaunch payloadkit';
+const defaultPythonCode = `numbers = [2, 4, 6, 8]
+total = sum(numbers)
+average = total / len(numbers)
+
+print("Numbers:", numbers)
+print("Total:", total)
+print("Average:", average)
+`;
 
 function App() {
   const [activePage, setActivePage] = useState(() => routeMap[window.location.pathname] || 'home');
@@ -84,6 +156,32 @@ function App() {
   const [base64Input, setBase64Input] = useState(defaultBase64Input);
   const [base64Output, setBase64Output] = useState(() => encodeBase64(defaultBase64Input));
   const [base64Error, setBase64Error] = useState('');
+
+  const [urlInput, setUrlInput] = useState(defaultUrlInput);
+  const [urlOutput, setUrlOutput] = useState(() => encodeUrlValue(defaultUrlInput));
+  const [urlError, setUrlError] = useState('');
+
+  const [hashInput, setHashInput] = useState(defaultHashInput);
+  const [hashOutput, setHashOutput] = useState('');
+  const [hashAlgorithm, setHashAlgorithm] = useState('SHA-256');
+  const [hashError, setHashError] = useState('');
+
+  const [regexPattern, setRegexPattern] = useState(defaultRegexPattern);
+  const [regexFlags, setRegexFlags] = useState('gi');
+  const [regexSample, setRegexSample] = useState(defaultRegexSample);
+  const [regexMatches, setRegexMatches] = useState(() =>
+    runRegexMatch(defaultRegexPattern, 'gi', defaultRegexSample)
+  );
+  const [regexError, setRegexError] = useState('');
+
+  const [uuidCount, setUuidCount] = useState('5');
+  const [uuidOutput, setUuidOutput] = useState(() => createUuidBatch(5));
+  const [uuidError, setUuidError] = useState('');
+
+  const [pythonCode, setPythonCode] = useState(defaultPythonCode);
+  const [pythonOutput, setPythonOutput] = useState('');
+  const [pythonError, setPythonError] = useState('');
+  const [pythonStatus, setPythonStatus] = useState('idle');
 
   const [copyStatus, setCopyStatus] = useState('');
   const [navElement, setNavElement] = useState(null);
@@ -193,6 +291,92 @@ function App() {
     } catch (error) {
       setBase64Output('');
       setBase64Error('Invalid Base64 input.');
+    }
+  };
+
+  const handleUrlEncode = () => {
+    try {
+      setUrlOutput(encodeUrlValue(urlInput));
+      setUrlError('');
+    } catch (error) {
+      setUrlOutput('');
+      setUrlError(error.message);
+    }
+  };
+
+  const handleUrlDecode = () => {
+    try {
+      setUrlOutput(decodeUrlValue(urlInput.trim()));
+      setUrlError('');
+    } catch (error) {
+      setUrlOutput('');
+      setUrlError(error.message);
+    }
+  };
+
+  const handleHashGenerate = async () => {
+    try {
+      const hash = await createHashValue(hashInput, hashAlgorithm);
+
+      setHashOutput(hash);
+      setHashError('');
+    } catch (error) {
+      setHashOutput('');
+      setHashError(error.message);
+    }
+  };
+
+  const handleRunRegex = () => {
+    try {
+      setRegexMatches(runRegexMatch(regexPattern, regexFlags, regexSample));
+      setRegexError('');
+    } catch (error) {
+      setRegexMatches([]);
+      setRegexError(error.message);
+    }
+  };
+
+  const handleRegexFlagsChange = (value) => {
+    setRegexFlags(value);
+    setRegexError('');
+
+    try {
+      parseRegexFlags(value);
+    } catch (error) {
+      setRegexMatches([]);
+      setRegexError(error.message);
+    }
+  };
+
+  const handleGenerateUuids = () => {
+    try {
+      const nextCount = Number.parseInt(uuidCount, 10);
+
+      setUuidOutput(createUuidBatch(nextCount));
+      setUuidError('');
+    } catch (error) {
+      setUuidOutput('');
+      setUuidError(error.message);
+    }
+  };
+
+  const handleRunPython = async () => {
+    setPythonStatus('loading');
+    setPythonError('');
+
+    try {
+      await loadPythonRuntime();
+      setPythonStatus('running');
+
+      const result = await runPythonCode(pythonCode);
+
+      setPythonOutput(result);
+      setPythonError('');
+      setPythonStatus('ready');
+    } catch (error) {
+      setPythonOutput('');
+      setPythonError(error.message);
+      setPythonStatus('error');
     }
   };
 
@@ -389,6 +573,69 @@ function App() {
             onBase64InputChange={setBase64Input}
             onEncode={handleBase64Encode}
             onDecode={handleBase64Decode}
+            onCopy={runCopy}
+          />
+        );
+      case 'url':
+        return (
+          <UrlTool
+            urlInput={urlInput}
+            urlOutput={urlOutput}
+            urlError={urlError}
+            onUrlInputChange={setUrlInput}
+            onEncode={handleUrlEncode}
+            onDecode={handleUrlDecode}
+            onCopy={runCopy}
+          />
+        );
+      case 'hash':
+        return (
+          <HashTool
+            hashInput={hashInput}
+            hashOutput={hashOutput}
+            hashError={hashError}
+            hashAlgorithm={hashAlgorithm}
+            onHashInputChange={setHashInput}
+            onHashAlgorithmChange={setHashAlgorithm}
+            onGenerateHash={handleHashGenerate}
+            onCopy={runCopy}
+          />
+        );
+      case 'regex':
+        return (
+          <RegexTool
+            regexPattern={regexPattern}
+            regexFlags={regexFlags}
+            regexSample={regexSample}
+            regexMatches={regexMatches}
+            regexError={regexError}
+            onRegexPatternChange={setRegexPattern}
+            onRegexFlagsChange={handleRegexFlagsChange}
+            onRegexSampleChange={setRegexSample}
+            onRunRegex={handleRunRegex}
+            onCopy={runCopy}
+          />
+        );
+      case 'uuid':
+        return (
+          <UuidTool
+            uuidCount={uuidCount}
+            uuidOutput={uuidOutput}
+            uuidError={uuidError}
+            onUuidCountChange={setUuidCount}
+            onGenerateUuids={handleGenerateUuids}
+            onCopy={runCopy}
+          />
+        );
+      case 'python':
+        return (
+          <PythonTool
+            pythonCode={pythonCode}
+            pythonOutput={pythonOutput}
+            pythonError={pythonError}
+            pythonStatus={pythonStatus}
+            onPythonCodeChange={setPythonCode}
+            onRunPython={handleRunPython}
             onCopy={runCopy}
           />
         );

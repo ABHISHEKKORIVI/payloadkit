@@ -30,6 +30,8 @@ body {
 .app-shell {
   min-height: 100vh;
   padding: 18px 20px 56px;
+  display: flex;
+  flex-direction: column;
 }
 
 .topbar {
@@ -53,7 +55,6 @@ body {
   background: transparent;
   padding: 0;
   color: var(--ink-strong);
-  font-family: Georgia, 'Times New Roman', serif;
   font-size: 1.7rem;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -200,6 +201,8 @@ body {
 .app-content {
   width: 100%;
   margin: 0 auto;
+  padding-inline: 0;
+  flex: 1 0 auto;
 }
 
 .home-page,
@@ -247,7 +250,6 @@ body {
 .page-header h1,
 .hero-card h2 {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
   font-weight: 700;
   letter-spacing: -0.03em;
 }
@@ -307,15 +309,33 @@ button {
 
 .why-section {
   margin-bottom: 34px;
+  padding-inline: 16px;
 }
 
 .cards-section {
-  padding: 8px 0 0;
+  padding: 8px 0 20px;
 }
 
 .tool-group-list {
   display: grid;
   gap: 34px;
+}
+
+.tool-group {
+  padding-inline: 16px;
+}
+
+.tool-group--compact {
+  padding-inline: 16px;
+}
+
+.tool-group--compact .hero-grid {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 280px));
+  justify-content: start;
+}
+
+.tool-group--compact .tool-card-button {
+  max-width: 280px;
 }
 
 .tool-group-heading {
@@ -324,7 +344,6 @@ button {
 
 .tool-group-heading h3 {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
   font-size: clamp(1.3rem, 2vw, 1.7rem);
   letter-spacing: -0.02em;
 }
@@ -343,7 +362,6 @@ button {
 
 .section-heading h2 {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
   font-size: clamp(1.8rem, 3vw, 2.5rem);
   letter-spacing: -0.03em;
 }
@@ -362,15 +380,14 @@ button {
 .why-card {
   border: 1px solid var(--line);
   border-radius: 22px;
-  padding: 24px;
+  padding: 20px 22px;
   background: rgba(255, 252, 247, 0.85);
   box-shadow: var(--shadow);
 }
 
 .why-card h3 {
   margin: 0 0 10px;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 1.3rem;
+  font-size: 1.16rem;
   letter-spacing: -0.02em;
 }
 
@@ -627,6 +644,22 @@ button:disabled {
   box-shadow: none;
 }
 
+.python-run-button--unavailable {
+  background: rgba(16, 37, 66, 0.9);
+}
+
+.python-run-button--unavailable:hover {
+  transform: none;
+  opacity: 0.5;
+  box-shadow: 0 10px 22px rgba(16, 37, 66, 0.14);
+  cursor: not-allowed;
+}
+
+.python-run-button--unavailable:focus-visible {
+  outline: 3px solid rgba(235, 94, 40, 0.34);
+  outline-offset: 3px;
+}
+
 .disabled-link {
   pointer-events: none;
   opacity: 0.45;
@@ -801,6 +834,7 @@ button:disabled {
   padding: 22px 12px 8px;
   text-align: center;
   color: var(--ink-soft);
+  flex-shrink: 0;
 }
 
 .site-footer p {
@@ -821,6 +855,10 @@ button:disabled {
 @media (max-width: 680px) {
   .app-shell {
     padding: 12px 12px 40px;
+  }
+
+  .app-content {
+    padding-inline: 4px;
   }
 
   .topbar {

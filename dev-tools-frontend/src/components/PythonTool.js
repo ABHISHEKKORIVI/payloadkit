@@ -2,18 +2,10 @@ function PythonTool({
   pythonCode,
   pythonOutput,
   pythonError,
-  pythonStatus,
   onPythonCodeChange,
-  onRunPython,
   onCopy,
 }) {
-  const isBusy = pythonStatus === 'loading' || pythonStatus === 'running';
-  const buttonLabel =
-    pythonStatus === 'loading'
-      ? 'Connecting...'
-      : pythonStatus === 'running'
-        ? 'Running...'
-        : 'Run Python';
+  const buttonLabel = 'Run Python';
 
   return (
     <section className="page-panel">
@@ -22,11 +14,16 @@ function PythonTool({
           <p className="panel-kicker">Developer Tool</p>
           <h1>Python Compiler</h1>
           <p className="page-text">
-            Run lightweight Python snippets through the FastAPI backend. Great for quick logic
-            checks, interview practice, and scratchpad experiments.
+            Python execution still needs the backend, so the button stays in a disabled-looking
+            state for this UI-only release.
           </p>
         </div>
-        <button type="button" onClick={onRunPython} disabled={isBusy}>
+        <button
+          type="button"
+          className="python-run-button python-run-button--unavailable"
+          aria-disabled="true"
+          title="Backend unavailable in this release"
+        >
           {buttonLabel}
         </button>
       </div>
@@ -41,16 +38,9 @@ function PythonTool({
             spellCheck="false"
           />
           <p className="helper-text">
-            Runs on the local backend with a short timeout. Best for small scripts and standard
-            library workflows.
+            Hover the button above to see the unavailable state.
           </p>
           {pythonError ? <p className="error-text">{pythonError}</p> : null}
-        </div>
-
-        <div className="mobile-action-row">
-          <button type="button" onClick={onRunPython} disabled={isBusy}>
-            {buttonLabel}
-          </button>
         </div>
 
         <div className="output-block">

@@ -66,7 +66,6 @@ export const toolGroups = [
         icon: FaQrcode,
         navLabel: 'QR Generator',
         brief: 'Generate downloadable QR codes for URLs, text, onboarding links, or internal tools.',
-        visible: false,
       },
       {
         id: 'uuid',

@@ -454,7 +454,11 @@ function App() {
 
         <div className="tool-group-list">
           {visibleToolGroups.map((group) => (
-            <section className="tool-group" key={group.id} aria-labelledby={`${group.id}-tools`}>
+            <section
+              className={group.id === 'backend' ? 'tool-group tool-group--compact' : 'tool-group'}
+              key={group.id}
+              aria-labelledby={`${group.id}-tools`}
+            >
               <div className="tool-group-heading">
                 <h3 id={`${group.id}-tools`}>{group.title}</h3>
                 <p>{group.description}</p>

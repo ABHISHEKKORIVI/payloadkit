@@ -10,7 +10,7 @@ function PythonTool({
   const isBusy = pythonStatus === 'loading' || pythonStatus === 'running';
   const buttonLabel =
     pythonStatus === 'loading'
-      ? 'Loading Python...'
+      ? 'Connecting...'
       : pythonStatus === 'running'
         ? 'Running...'
         : 'Run Python';
@@ -22,8 +22,8 @@ function PythonTool({
           <p className="panel-kicker">Developer Tool</p>
           <h1>Python Compiler</h1>
           <p className="page-text">
-            Run lightweight Python snippets directly in the browser using a client-side runtime.
-            Great for quick logic checks, interview practice, and scratchpad experiments.
+            Run lightweight Python snippets through the FastAPI backend. Great for quick logic
+            checks, interview practice, and scratchpad experiments.
           </p>
         </div>
         <button type="button" onClick={onRunPython} disabled={isBusy}>
@@ -41,8 +41,8 @@ function PythonTool({
             spellCheck="false"
           />
           <p className="helper-text">
-            Runs in your browser with Pyodide. Best for small scripts and supported standard
-            Python workflows.
+            Runs on the local backend with a short timeout. Best for small scripts and standard
+            library workflows.
           </p>
           {pythonError ? <p className="error-text">{pythonError}</p> : null}
         </div>

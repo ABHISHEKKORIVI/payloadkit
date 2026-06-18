@@ -25,17 +25,32 @@ test('renders the public home page and opens a tool page', async () => {
     screen.getByRole('heading', { name: /all your dev tools one clean workspace/i })
   ).toBeInTheDocument();
   expect(
-    screen.getByText(/100% client-side\. no data stored/i)
+    screen.getByText(/client-first utilities with backend power where it helps\. no data stored/i)
   ).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: /why payloadkit/i })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /runtime tools/i })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /payload tools/i })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /generators and test helpers/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /runtime tools/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /payload tools/i })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /generators and test helpers/i })).toBeInTheDocument();
   expect(screen.getAllByRole('button', { name: /json formatter/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('button', { name: /url encoder/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('button', { name: /hash generator/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('button', { name: /regex tester/i }).length).toBeGreaterThan(0);
-  expect(screen.getAllByRole('button', { name: /uuid generator/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByRole('button', { name: /python compiler/i }).length).toBeGreaterThan(0);
+  expect(screen.queryByRole('button', { name: /qr generator/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /timestamp converter/i })).not.toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole('button', { name: /^jwt decoder$/i }));
+  await userEvent.click(screen.getByRole('button', { name: /payload tools/i }));
+
+  expect(screen.getByRole('menuitem', { name: /url encoder/i })).toBeInTheDocument();
+  expect(screen.queryByRole('menuitem', { name: /hash generator/i })).not.toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('heading', { name: /why payloadkit/i }));
+
+  expect(screen.queryByRole('menuitem', { name: /url encoder/i })).not.toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: /payload tools/i }));
+
+  await userEvent.click(screen.getByRole('menuitem', { name: /jwt decoder/i }));
 
   expect(screen.getByRole('heading', { name: /jwt decoder/i })).toBeInTheDocument();
   expect(screen.getByLabelText(/jwt token/i)).toBeInTheDocument();

@@ -1,6 +1,9 @@
-# Getting Started with Create React App
+# PayloadKit Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React UI for PayloadKit developer tools.
+
+Tools are grouped in `src/tools/toolRegistry.js` so backend-powered tools, payload tools, and
+generators/test helpers can grow without becoming one mixed list.
 
 ## Available Scripts
 
@@ -13,6 +16,15 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+
+Backend-powered tools call `http://localhost:8000` by default. To run the Python compiler locally:
+
+```powershell
+cd ..\backend
+.\venv\Scripts\python.exe run.py
+```
+
+Set `REACT_APP_API_BASE_URL` if the FastAPI backend runs somewhere else.
 
 ### `npm test`
 

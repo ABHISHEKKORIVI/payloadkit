@@ -1,16 +1,5 @@
-import { useEffect, useState } from 'react';
-import {
-  FaCode,
-  FaExchangeAlt,
-  FaFingerprint,
-  FaKey,
-  FaLink,
-  FaPlayCircle,
-  FaQrcode,
-  FaRandom,
-  FaSearch,
-} from 'react-icons/fa';
-import { FiChevronRight } from 'react-icons/fi';
+import { useEffect, useRef, useState } from 'react';
+import { FiChevronDown } from 'react-icons/fi';
 import Base64Tool from './components/Base64Tool';
 import HashTool from './components/HashTool';
 import JsonTool from './components/JsonTool';
@@ -18,104 +7,24 @@ import JwtTool from './components/JwtTool';
 import PythonTool from './components/PythonTool';
 import QrTool from './components/QrTool';
 import RegexTool from './components/RegexTool';
+import TimestampTool from './components/TimestampTool';
 import UrlTool from './components/UrlTool';
 import UuidTool from './components/UuidTool';
 import './App.css';
+import { routeMap, pageToPath, visibleToolGroups, tools } from './tools/toolRegistry';
 import { decodeBase64, encodeBase64 } from './utils/base64';
 import { copyText } from './utils/clipboard';
 import { createHashValue } from './utils/hash';
 import { formatJsonValue } from './utils/json';
 import { parseJwtValue } from './utils/jwt';
-import { loadPythonRuntime, runPythonCode } from './utils/python';
+import { runPythonCode } from './utils/python';
 import { createQrCode } from './utils/qr';
 import { parseRegexFlags, runRegexMatch } from './utils/regex';
+import { convertTimestamp, createCurrentTimestamp } from './utils/timestamp';
 import { decodeUrlValue, encodeUrlValue } from './utils/url';
 import { createUuidBatch } from './utils/uuid';
 
 const BRAND_NAME = 'PayloadKit';
-
-const routeMap = {
-  '/': 'home',
-  '/json-formatter': 'json',
-  '/jwt-decoder': 'jwt',
-  '/qr-generator': 'qr',
-  '/base64-tool': 'base64',
-  '/url-encoder': 'url',
-  '/hash-generator': 'hash',
-  '/regex-tester': 'regex',
-  '/uuid-generator': 'uuid',
-  '/python-runner': 'python',
-};
-
-const pageToPath = {
-  home: '/',
-  json: '/json-formatter',
-  jwt: '/jwt-decoder',
-  qr: '/qr-generator',
-  base64: '/base64-tool',
-  url: '/url-encoder',
-  hash: '/hash-generator',
-  regex: '/regex-tester',
-  uuid: '/uuid-generator',
-  python: '/python-runner',
-};
-
-const tools = [
-  {
-    id: 'python',
-    icon: FaPlayCircle,
-    navLabel: 'Python Compiler',
-    brief: 'Run Python snippets in the browser for quick logic tests, experiments, and debugging work.',
-  },
-  {
-    id: 'json',
-    icon: FaCode,
-    navLabel: 'JSON Formatter',
-    brief: 'Format, validate, and review JSON payloads with readable syntax highlighting.',
-  },
-  {
-    id: 'qr',
-    icon: FaQrcode,
-    navLabel: 'QR Generator',
-    brief: 'Generate downloadable QR codes for URLs, text, onboarding links, or internal tools.',
-  },
-  {
-    id: 'uuid',
-    icon: FaRandom,
-    navLabel: 'UUID Generator',
-    brief: 'Generate one or many UUIDs for payloads, seeds, fixtures, and integration testing work.',
-  },
-  {
-    id: 'jwt',
-    icon: FaKey,
-    navLabel: 'JWT Decoder',
-    brief: 'Inspect JWT headers and claims locally while debugging auth flows.',
-  },
-  {
-    id: 'base64',
-    icon: FaExchangeAlt,
-    navLabel: 'Base64 Tool',
-    brief: 'Encode or decode text safely for API work, headers, and quick utility tasks.',
-  },
-  {
-    id: 'url',
-    icon: FaLink,
-    navLabel: 'URL Encoder',
-    brief: 'Encode or decode URLs, query strings, and redirect parameters without leaving the browser.',
-  },
-  {
-    id: 'hash',
-    icon: FaFingerprint,
-    navLabel: 'Hash Generator',
-    brief: 'Generate SHA-256 or SHA-512 hashes for payload checks, signatures, and integrity checks.',
-  },
-  {
-    id: 'regex',
-    icon: FaSearch,
-    navLabel: 'Regex Tester',
-    brief: 'Test regular expressions against sample text and inspect matches, groups, and flags locally.',
-  },
-];
 
 const defaultJsonInput =
   '{\n  "project": "PayloadKit",\n  "visibility": "public",\n  "tools": ["JSON", "JWT", "QR", "Base64"]\n}';
@@ -183,8 +92,13 @@ function App() {
   const [pythonError, setPythonError] = useState('');
   const [pythonStatus, setPythonStatus] = useState('idle');
 
+  const [timestampInput, setTimestampInput] = useState('1717000000');
+  const [timestampResult, setTimestampResult] = useState(() => convertTimestamp('1717000000'));
+  const [timestampError, setTimestampError] = useState('');
+
   const [copyStatus, setCopyStatus] = useState('');
-  const [navElement, setNavElement] = useState(null);
+  const [openMenuId, setOpenMenuId] = useState('');
+  const navRef = useRef(null);
 
   const runCopy = async (value, label) => {
     try {
@@ -361,23 +275,38 @@ function App() {
   };
 
   const handleRunPython = async () => {
-    setPythonStatus('loading');
+    setPythonStatus('running');
     setPythonError('');
 
     try {
-      await loadPythonRuntime();
-      setPythonStatus('running');
-
       const result = await runPythonCode(pythonCode);
 
-      setPythonOutput(result);
-      setPythonError('');
-      setPythonStatus('ready');
+      setPythonOutput(result.output);
+      setPythonError(result.error);
+      setPythonStatus(result.error ? 'error' : 'ready');
     } catch (error) {
       setPythonOutput('');
       setPythonError(error.message);
       setPythonStatus('error');
     }
+  };
+
+  const handleConvertTimestamp = () => {
+    try {
+      setTimestampResult(convertTimestamp(timestampInput));
+      setTimestampError('');
+    } catch (error) {
+      setTimestampResult(null);
+      setTimestampError(error.message);
+    }
+  };
+
+  const handleUseCurrentTimestamp = () => {
+    const current = createCurrentTimestamp();
+
+    setTimestampInput(current.input);
+    setTimestampResult(current.result);
+    setTimestampError('');
   };
 
   useEffect(() => {
@@ -438,6 +367,28 @@ function App() {
     return () => window.clearTimeout(timeout);
   }, [copyStatus]);
 
+  useEffect(() => {
+    const handlePointerDown = (event) => {
+      if (!navRef.current?.contains(event.target)) {
+        setOpenMenuId('');
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setOpenMenuId('');
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const navigateTo = (page) => {
     const nextPath = pageToPath[page] || '/';
 
@@ -446,17 +397,7 @@ function App() {
     }
 
     setActivePage(page);
-  };
-
-  const scrollToolNav = () => {
-    if (!navElement) {
-      return;
-    }
-
-    navElement.scrollBy({
-      left: 220,
-      behavior: 'smooth',
-    });
+    setOpenMenuId('');
   };
 
   const renderHome = () => (
@@ -468,7 +409,7 @@ function App() {
           workspace designed to make debugging, payload handling, and everyday development tasks
           faster and simpler
         </p>
-        <p className="trust-line">100% client-side. No data stored</p>
+        <p className="trust-line">Client-first utilities with backend power where it helps. No data stored</p>
         <div className="hero-actions">
           <button type="button" onClick={() => navigateTo('json')}>
             Start Using Tools
@@ -511,16 +452,31 @@ function App() {
           <p>Explore a focused set of browser-based utilities for everyday developer tasks</p>
         </div>
 
-        <div className="hero-grid">
-          {tools.map((tool) => (
-            <button type="button" key={tool.id} className="hero-card tool-card-button" onClick={() => navigateTo(tool.id)}>
-              <span className="tool-icon" aria-hidden="true">
-                <tool.icon />
-              </span>
-              <h2>{tool.navLabel}</h2>
-              <p>{tool.brief}</p>
-              <span className="card-link">Use Tool -&gt;</span>
-            </button>
+        <div className="tool-group-list">
+          {visibleToolGroups.map((group) => (
+            <section className="tool-group" key={group.id} aria-labelledby={`${group.id}-tools`}>
+              <div className="tool-group-heading">
+                <h3 id={`${group.id}-tools`}>{group.title}</h3>
+                <p>{group.description}</p>
+              </div>
+              <div className="hero-grid">
+                {group.tools.map((tool) => (
+                  <button
+                    type="button"
+                    key={tool.id}
+                    className="hero-card tool-card-button"
+                    onClick={() => navigateTo(tool.id)}
+                  >
+                    <span className="tool-icon" aria-hidden="true">
+                      <tool.icon />
+                    </span>
+                    <h2>{tool.navLabel}</h2>
+                    <p>{tool.brief}</p>
+                    <span className="card-link">Use Tool -&gt;</span>
+                  </button>
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       </div>
@@ -639,6 +595,18 @@ function App() {
             onCopy={runCopy}
           />
         );
+      case 'timestamp':
+        return (
+          <TimestampTool
+            timestampInput={timestampInput}
+            timestampResult={timestampResult}
+            timestampError={timestampError}
+            onTimestampInputChange={setTimestampInput}
+            onConvertTimestamp={handleConvertTimestamp}
+            onUseCurrentTimestamp={handleUseCurrentTimestamp}
+            onCopy={runCopy}
+          />
+        );
       default:
         return renderHome();
     }
@@ -652,7 +620,7 @@ function App() {
         </button>
 
         <div className="nav-scroll-wrap">
-          <nav className="topnav" aria-label="Primary navigation" ref={setNavElement}>
+          <nav className="topnav" aria-label="Primary navigation" ref={navRef}>
             <button
               type="button"
               className={activePage === 'home' ? 'nav-link active' : 'nav-link'}
@@ -660,20 +628,48 @@ function App() {
             >
               Home
             </button>
-            {tools.map((tool) => (
-              <button
-                type="button"
-                key={tool.id}
-                className={activePage === tool.id ? 'nav-link active' : 'nav-link'}
-                onClick={() => navigateTo(tool.id)}
-              >
-                {tool.navLabel}
-              </button>
-            ))}
+            {visibleToolGroups.map((group) => {
+              const isGroupActive = group.tools.some((tool) => tool.id === activePage);
+              const isOpen = openMenuId === group.id;
+
+              return (
+                <div className="nav-menu" key={group.id}>
+                  <button
+                    type="button"
+                    className={isGroupActive ? 'nav-link nav-menu-trigger active' : 'nav-link nav-menu-trigger'}
+                    aria-expanded={isOpen}
+                    aria-haspopup="true"
+                    onClick={() => setOpenMenuId((current) => (current === group.id ? '' : group.id))}
+                  >
+                    {group.title}
+                    <FiChevronDown aria-hidden="true" />
+                  </button>
+
+                  {isOpen ? (
+                    <div className="tools-dropdown" role="menu" aria-label={group.title}>
+                      {group.tools.map((tool) => (
+                        <button
+                          type="button"
+                          key={tool.id}
+                          className={activePage === tool.id ? 'tools-dropdown-item active' : 'tools-dropdown-item'}
+                          onClick={() => navigateTo(tool.id)}
+                          role="menuitem"
+                        >
+                          <span className="tools-dropdown-icon" aria-hidden="true">
+                            <tool.icon />
+                          </span>
+                          <span>
+                            <span className="tools-dropdown-label">{tool.navLabel}</span>
+                            <span className="tools-dropdown-brief">{tool.brief}</span>
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </nav>
-          <button type="button" className="nav-more-hint" aria-label="Scroll to more tools" onClick={scrollToolNav}>
-            <FiChevronRight />
-          </button>
         </div>
 
         <button type="button" className="theme-toggle" onClick={() => setIsDarkMode((current) => !current)}>

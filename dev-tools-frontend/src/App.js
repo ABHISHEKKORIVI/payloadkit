@@ -58,7 +58,7 @@ function App() {
   const [jwtStatus, setJwtStatus] = useState(() => parseJwtValue(defaultJwtInput).status);
   const [jwtError, setJwtError] = useState('');
 
-  const [qrInput, setQrInput] = useState('https://payloadkit.app');
+  const [qrInput, setQrInput] = useState('https://payloadkit.in/');
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [qrError, setQrError] = useState('');
 

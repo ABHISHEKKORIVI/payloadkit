@@ -11,7 +11,7 @@ import TimestampTool from './components/TimestampTool';
 import UrlTool from './components/UrlTool';
 import UuidTool from './components/UuidTool';
 import './App.css';
-import { routeMap, pageToPath, visibleToolGroups, tools } from './tools/toolRegistry';
+import { routeMap, pageToPath, visibleToolGroups } from './tools/toolRegistry';
 import { decodeBase64, encodeBase64 } from './utils/base64';
 import { copyText } from './utils/clipboard';
 import { createHashValue } from './utils/hash';

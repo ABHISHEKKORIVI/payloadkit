@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiChevronDown } from 'react-icons/fi';
+import { FiChevronDown, FiHome, FiMenu, FiMoon, FiSun, FiX } from 'react-icons/fi';
 import Base64Tool from './components/Base64Tool';
 import HashTool from './components/HashTool';
 import JsonTool from './components/JsonTool';
@@ -98,6 +98,7 @@ function App() {
 
   const [copyStatus, setCopyStatus] = useState('');
   const [openMenuId, setOpenMenuId] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navRef = useRef(null);
 
   const runCopy = async (value, label) => {
@@ -398,6 +399,7 @@ function App() {
 
     setActivePage(page);
     setOpenMenuId('');
+    setIsMobileMenuOpen(false);
   };
 
   const renderHome = () => (
@@ -405,9 +407,8 @@ function App() {
       <div className="hero-copy home-hero">
         <h1>All your dev tools One clean workspace</h1>
         <p className="hero-text">
-          Format JSON, inspect JWTs, generate QR codes, and convert Base64 in one clean browser
-          workspace designed to make debugging, payload handling, and everyday development tasks
-          faster and simpler
+          A focused browser workspace for everyday developer tasks.
+          Built to keep debugging, payload handling, and quick utility work fast, simple, and clean.
         </p>
         <p className="trust-line">Client-first utilities with backend power where it helps. No data stored</p>
         <div className="hero-actions">
@@ -619,6 +620,17 @@ function App() {
   return (
     <div className="app-shell">
       <header className="topbar">
+        <button
+          type="button"
+          className="mobile-menu-toggle"
+          onClick={() => setIsMobileMenuOpen((current) => !current)}
+          aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="mobile-nav-drawer"
+        >
+          {isMobileMenuOpen ? <FiX aria-hidden="true" /> : <FiMenu aria-hidden="true" />}
+        </button>
+
         <button type="button" className="brand-mark" onClick={() => navigateTo('home')}>
           {BRAND_NAME}
         </button>
@@ -629,8 +641,10 @@ function App() {
               type="button"
               className={activePage === 'home' ? 'nav-link active' : 'nav-link'}
               onClick={() => navigateTo('home')}
+              aria-label="Home"
+              title="Home"
             >
-              Home
+              <FiHome aria-hidden="true" />
             </button>
             {visibleToolGroups.map((group) => {
               const isGroupActive = group.tools.some((tool) => tool.id === activePage);
@@ -676,10 +690,54 @@ function App() {
           </nav>
         </div>
 
-        <button type="button" className="theme-toggle" onClick={() => setIsDarkMode((current) => !current)}>
-          {isDarkMode ? 'Light' : 'Dark'}
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={() => setIsDarkMode((current) => !current)}
+          aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          <span className="theme-toggle-icon" aria-hidden="true">
+            <FiMoon
+              className={isDarkMode ? 'theme-toggle-glyph theme-toggle-glyph--hidden theme-toggle-glyph--moon' : 'theme-toggle-glyph theme-toggle-glyph--visible theme-toggle-glyph--moon'}
+            />
+            <FiSun
+              className={isDarkMode ? 'theme-toggle-glyph theme-toggle-glyph--visible theme-toggle-glyph--sun' : 'theme-toggle-glyph theme-toggle-glyph--hidden theme-toggle-glyph--sun'}
+            />
+          </span>
+          <span className="theme-toggle-label" key={isDarkMode ? 'light' : 'dark'}>
+            {isDarkMode ? 'Light' : 'Dark'}
+          </span>
         </button>
       </header>
+
+      <div className={isMobileMenuOpen ? 'mobile-nav-drawer mobile-nav-drawer--open' : 'mobile-nav-drawer'} id="mobile-nav-drawer">
+        <div className="mobile-nav-groups">
+          {visibleToolGroups.map((group) => (
+            <section className="mobile-nav-group" key={group.id} aria-labelledby={`${group.id}-mobile-nav`}>
+              <h3 id={`${group.id}-mobile-nav`}>{group.title}</h3>
+              <div className="mobile-nav-tools">
+                {group.tools.map((tool) => (
+                  <button
+                    type="button"
+                    key={tool.id}
+                    className={activePage === tool.id ? 'mobile-nav-tool active' : 'mobile-nav-tool'}
+                    onClick={() => navigateTo(tool.id)}
+                  >
+                    <span className="mobile-nav-tool-icon" aria-hidden="true">
+                      <tool.icon />
+                    </span>
+                    <span className="mobile-nav-tool-copy">
+                      <span className="mobile-nav-tool-label">{tool.navLabel}</span>
+                      <span className="mobile-nav-tool-brief">{tool.brief}</span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
 
       <main className="app-content">
         {copyStatus ? <p className="status-banner">{copyStatus}</p> : null}

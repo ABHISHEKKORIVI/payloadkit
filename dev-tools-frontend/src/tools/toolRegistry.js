@@ -9,9 +9,65 @@ import {
   FaRandom,
   FaSearch,
   FaClock,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFileAlt,
+  FaAlignLeft,
+  FaLock,
 } from 'react-icons/fa';
 
 export const toolGroups = [
+  {
+    id: 'files',
+    title: 'File Tools',
+    description: 'Work with PDFs, Word documents, spreadsheets, and images locally before sharing or uploading them.',
+    tools: [
+      {
+        id: 'pdf',
+        icon: FaFilePdf,
+        navLabel: 'PDF Merge & Split',
+        brief: 'Combine PDF files or extract selected pages without uploading sensitive documents.',
+      },
+      {
+        id: 'image',
+        icon: FaFileImage,
+        navLabel: 'Image Compressor',
+        brief: 'Resize and compress JPG, PNG, and WebP images for faster sharing and uploads.',
+      },
+      {
+        id: 'spreadsheet',
+        icon: FaFileExcel,
+        navLabel: 'Spreadsheet Converter',
+        brief: 'Preview CSV and Excel files, then convert the first sheet to CSV or JSON.',
+      },
+      {
+        id: 'word',
+        icon: FaFileAlt,
+        navLabel: 'Word Document Reader',
+        brief: 'Read DOCX text locally and download a clean plain-text copy.',
+      },
+    ],
+  },
+  {
+    id: 'everyday',
+    title: 'Everyday Utilities',
+    description: 'Small, useful tools for cleaning text and handling common work tasks.',
+    tools: [
+      {
+        id: 'text',
+        icon: FaAlignLeft,
+        navLabel: 'Text Cleaner',
+        brief: 'Normalize spaces and remove empty or duplicate lines from copied text.',
+      },
+      {
+        id: 'password',
+        icon: FaLock,
+        navLabel: 'Password Generator',
+        brief: 'Generate strong passwords locally with adjustable length and character sets.',
+      },
+    ],
+  },
   {
     id: 'backend',
     title: 'Runtime Tools',
@@ -107,6 +163,12 @@ export const tools = visibleToolGroups.flatMap((group) => group.tools);
 
 export const routeMap = {
   '/': 'home',
+  '/pdf-tools': 'pdf',
+  '/image-compressor': 'image',
+  '/spreadsheet-converter': 'spreadsheet',
+  '/word-reader': 'word',
+  '/text-cleaner': 'text',
+  '/password-generator': 'password',
   '/json-formatter': 'json',
   '/jwt-decoder': 'jwt',
   '/qr-generator': 'qr',
@@ -121,6 +183,12 @@ export const routeMap = {
 
 export const pageToPath = {
   home: '/',
+  pdf: '/pdf-tools',
+  image: '/image-compressor',
+  spreadsheet: '/spreadsheet-converter',
+  word: '/word-reader',
+  text: '/text-cleaner',
+  password: '/password-generator',
   json: '/json-formatter',
   jwt: '/jwt-decoder',
   qr: '/qr-generator',

@@ -10,6 +10,7 @@ import RegexTool from './components/RegexTool';
 import TimestampTool from './components/TimestampTool';
 import UrlTool from './components/UrlTool';
 import UuidTool from './components/UuidTool';
+import UtilityTool from './components/UtilityTool';
 import './App.css';
 import { routeMap, pageToPath, visibleToolGroups } from './tools/toolRegistry';
 import { decodeBase64, encodeBase64 } from './utils/base64';
@@ -490,6 +491,18 @@ function App() {
 
   const renderPage = () => {
     switch (activePage) {
+      case 'pdf':
+        return <UtilityTool type="pdf" />;
+      case 'image':
+        return <UtilityTool type="image" />;
+      case 'spreadsheet':
+        return <UtilityTool type="spreadsheet" />;
+      case 'word':
+        return <UtilityTool type="word" />;
+      case 'text':
+        return <UtilityTool type="text" />;
+      case 'password':
+        return <UtilityTool type="password" />;
       case 'json':
         return (
           <JsonTool

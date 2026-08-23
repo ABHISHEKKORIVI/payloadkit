@@ -1,9 +1,12 @@
 # PayloadKit Frontend
 
-React UI for PayloadKit developer tools.
+React UI for PayloadKit's browser-based file, office, everyday, and developer tools.
 
-Tools are grouped in `src/tools/toolRegistry.js` so backend-powered tools, payload tools, and
-generators/test helpers can grow without becoming one mixed list.
+Tools are grouped in `src/tools/toolRegistry.js` so file and office operations, everyday
+utilities, backend-powered tools, payload tools, and developer helpers stay easy to discover.
+
+PDF merge/split, DOCX text extraction, spreadsheet conversion, image compression, text cleaning,
+and password generation run locally in the browser. Files are not sent to the Python API.
 
 ## Available Scripts
 

@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 
@@ -56,4 +56,32 @@ test('renders the public home page and opens a tool page', async () => {
   expect(screen.getByRole('heading', { name: /jwt decoder/i })).toBeInTheDocument();
   expect(screen.getByLabelText(/jwt token/i)).toBeInTheDocument();
   expect(window.location.pathname).toBe('/jwt-decoder');
+});
+
+test('guides users through selecting and removing PDF merge files', () => {
+  window.history.pushState({}, '', '/pdf-tools');
+  render(<App />);
+
+  expect(screen.getByRole('heading', { name: /pdf merge & split/i })).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: /merge pdfs/i })).toHaveAttribute('aria-selected', 'true');
+
+  const fileInput = screen.getByLabelText(/pdf files to merge/i);
+  const firstFile = new File(['first'], 'first.pdf', { type: 'application/pdf' });
+  const secondFile = new File(['second'], 'second.pdf', { type: 'application/pdf' });
+  const mergeButton = screen.getByRole('button', { name: /merge and download/i });
+
+  fireEvent.change(fileInput, { target: { files: [firstFile] } });
+  expect(mergeButton).toBeDisabled();
+  expect(screen.getByText(/selected pdf \(1\)/i)).toBeInTheDocument();
+  expect(screen.getByText('first.pdf')).toBeInTheDocument();
+
+  fireEvent.change(fileInput, { target: { files: [secondFile] } });
+  expect(mergeButton).toBeEnabled();
+  expect(screen.getByText(/selected pdfs \(2\)/i)).toBeInTheDocument();
+  expect(screen.getByText('second.pdf')).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /remove first\.pdf/i }));
+  expect(screen.getByText(/selected pdf \(1\)/i)).toBeInTheDocument();
+  expect(screen.queryByText('first.pdf')).not.toBeInTheDocument();
+  expect(mergeButton).toBeDisabled();
 });

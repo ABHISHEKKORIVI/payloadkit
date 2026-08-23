@@ -793,6 +793,7 @@ textarea:focus {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+  width: min(100%, 760px);
   margin-bottom: 8px;
 }
 
@@ -849,6 +850,10 @@ textarea:focus {
   opacity: 1;
   transform: none;
   box-shadow: none;
+}
+
+.pdf-process-button {
+  width: min(100%, 760px);
 }
 
 .pdf-process-button:has(.loading-icon) {
@@ -1983,4 +1988,137 @@ body.dark .nav-link.active {
 
 body.dark .hero-card:hover {
   background: rgba(20, 32, 47, 0.96);
+}
+
+body.dark .pdf-operation-tab {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(194, 208, 224, 0.2);
+  color: #edf3f9;
+  box-shadow: none;
+}
+
+body.dark .pdf-operation-tab:hover {
+  background: rgba(241, 164, 111, 0.18);
+  border-color: rgba(241, 164, 111, 0.6);
+  box-shadow: none;
+}
+
+body.dark .pdf-operation-tab.active {
+  background: #e7a477;
+  border-color: #f0bd96;
+  color: #24160f;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+body.dark .pdf-operation-tab svg {
+  color: #8c4a2a;
+}
+
+body.dark .pdf-operation-tab small,
+body.dark .split-picker-heading,
+body.dark .split-picker-help {
+  color: #b9c8d8;
+}
+
+body.dark .pdf-file-picker {
+  background: rgba(241, 164, 111, 0.14);
+  border-color: #e7a477;
+  color: #edf3f9;
+}
+
+body.dark .pdf-file-picker:hover {
+  background: rgba(241, 164, 111, 0.24);
+}
+
+body.dark .pdf-page-card,
+body.dark .pdf-page-preview,
+body.dark .selected-files {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(194, 208, 224, 0.2);
+  color: #edf3f9;
+  box-shadow: none;
+}
+
+body.dark .pdf-page-card:hover {
+  background: rgba(241, 164, 111, 0.16);
+  border-color: rgba(241, 164, 111, 0.6);
+  box-shadow: none;
+}
+
+body.dark .pdf-page-card.selected {
+  background: #e7a477;
+  border-color: #f0bd96;
+  color: #24160f;
+}
+
+body.dark .pdf-page-number,
+body.dark .pdf-page-preview img {
+  background: #f4f7fa;
+  border-color: rgba(194, 208, 224, 0.3);
+  color: #172536;
+}
+
+body.dark .selected-files-list {
+  border-color: rgba(194, 208, 224, 0.2);
+}
+
+body.dark .selected-files li {
+  color: #c4d0dd;
+}
+
+body.dark .selected-files li svg {
+  color: #c8d5e2;
+}
+
+body.dark .pdf-requirement,
+body.dark .pdf-single-page-note {
+  color: #f0b98e;
+}
+
+body.dark .pdf-process-button.disabled,
+body.dark .pdf-process-button.disabled:hover {
+  background: #536274;
+  border-color: #536274;
+  color: #dce5ed;
+}
+
+.pdf-operation-tab.active,
+.pdf-file-picker {
+  background: var(--ink-strong);
+  border-color: rgba(16, 37, 66, 0.08);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(16, 37, 66, 0.14);
+}
+
+.pdf-operation-tab.active svg,
+.pdf-file-picker svg {
+  color: currentColor;
+}
+
+.pdf-operation-tab.active:hover,
+.pdf-file-picker:hover {
+  background: var(--ink-strong);
+  box-shadow: 0 14px 28px rgba(16, 37, 66, 0.18);
+}
+
+.pdf-operation-tab.active small {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+body.dark .pdf-operation-tab.active,
+body.dark .pdf-file-picker {
+  background: linear-gradient(180deg, #ffb26b 0%, #f0823d 100%);
+  border-color: rgba(255, 178, 107, 0.68);
+  color: #1a120b;
+  box-shadow: 0 12px 26px rgba(240, 130, 61, 0.22);
+}
+
+body.dark .pdf-operation-tab.active:hover,
+body.dark .pdf-file-picker:hover {
+  background: linear-gradient(180deg, #ffc184 0%, #ff9148 100%);
+  box-shadow: 0 16px 34px rgba(240, 130, 61, 0.28);
+}
+
+body.dark .pdf-operation-tab.active small {
+  color: rgba(26, 18, 11, 0.74);
 }

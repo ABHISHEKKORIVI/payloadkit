@@ -18,6 +18,10 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   background:
@@ -25,6 +29,9 @@ body {
     radial-gradient(circle at top right, rgba(16, 37, 66, 0.08), transparent 24%),
     linear-gradient(180deg, #fcfdff 0%, #f4f7fb 48%, #eef3f9 100%);
   color: var(--ink-strong);
+  overflow-x: hidden;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 .app-shell {
@@ -1002,7 +1009,7 @@ button:disabled {
   .topbar {
     position: relative;
     display: grid;
-    grid-template-columns: 36px 1fr auto;
+    grid-template-columns: 36px minmax(0, 1fr) auto;
     align-items: start;
     gap: 8px;
   }
@@ -1048,6 +1055,8 @@ button:disabled {
     padding-right: 0;
     padding-left: 2px;
     align-self: center;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .nav-scroll-wrap {
@@ -1196,15 +1205,36 @@ button:disabled {
   .hero-copy h1 {
     max-width: 100%;
     font-size: clamp(1.2rem, 4vw, 1.6rem);
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .hero-text {
     max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .trust-line {
     text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  .hero-actions > * {
+    width: 100%;
+  }
+
+  .home-page,
+  .hero-copy,
+  .page-panel,
+  .input-panel,
+  .output-block,
+  .hero-card,
+  .why-card,
+  .tool-layout,
+  .tool-grid,
+  .hero-grid,
+  .why-grid {
+    min-width: 0;
   }
 
   .hero-grid,
@@ -1212,6 +1242,14 @@ button:disabled {
   .tool-layout,
   .why-grid {
     grid-template-columns: 1fr;
+  }
+
+  .tool-group--compact .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tool-group--compact .tool-card-button {
+    max-width: none;
   }
 
   .page-header > .button-row,

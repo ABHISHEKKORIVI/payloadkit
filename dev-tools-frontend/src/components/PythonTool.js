@@ -2,10 +2,13 @@ function PythonTool({
   pythonCode,
   pythonOutput,
   pythonError,
+  pythonStatus,
   onPythonCodeChange,
+  onRunPython,
   onCopy,
 }) {
-  const buttonLabel = 'Run Python';
+  const isRunning = pythonStatus === 'running';
+  const buttonLabel = isRunning ? 'Running...' : 'Run Python';
 
   return (
     <section className="page-panel">
@@ -14,15 +17,15 @@ function PythonTool({
           <p className="panel-kicker">Developer Tool</p>
           <h1>Python Compiler</h1>
           <p className="page-text">
-            Python execution still needs the backend, so the button stays in a disabled-looking
-            state for this UI-only release.
+            Run small Python snippets through the PayloadKit backend and review stdout and errors
+            in one place.
           </p>
         </div>
         <button
           type="button"
-          className="python-run-button python-run-button--unavailable"
-          aria-disabled="true"
-          title="Backend unavailable in this release"
+          className="python-run-button"
+          disabled={isRunning}
+          onClick={onRunPython}
         >
           {buttonLabel}
         </button>
@@ -38,7 +41,7 @@ function PythonTool({
             spellCheck="false"
           />
           <p className="helper-text">
-            Hover the button above to see the unavailable state.
+            Keep snippets short. Long-running code is stopped automatically.
           </p>
           {pythonError ? <p className="error-text">{pythonError}</p> : null}
         </div>

@@ -1,4 +1,6 @@
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+const defaultApiBaseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : '';
+
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || defaultApiBaseUrl;
 
 export const postJson = async (path, payload) => {
   const response = await fetch(`${API_BASE_URL}${path}`, {

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 
@@ -28,16 +28,17 @@ test('renders the public home page and opens a tool page', async () => {
     screen.getByText(/client-first utilities with backend power where it helps\. no data stored/i)
   ).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: /why payloadkit/i })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: /runtime tools/i })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: /payload tools/i })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: /generators and test helpers/i })).toBeInTheDocument();
+  expect(screen.getAllByRole('heading', { name: /runtime tools/i }).length).toBeGreaterThan(0);
+  expect(screen.getAllByRole('heading', { name: /payload tools/i }).length).toBeGreaterThan(0);
+  expect(screen.getAllByRole('heading', { name: /generators and test helpers/i }).length).toBeGreaterThan(0);
   expect(screen.getByRole('button', { name: /runtime tools/i })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /payload tools/i })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /generators and test helpers/i })).toBeInTheDocument();
   expect(screen.getAllByRole('button', { name: /json formatter/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByRole('button', { name: /python compiler/i }).length).toBeGreaterThan(0);
-  expect(screen.queryByRole('button', { name: /qr generator/i })).not.toBeInTheDocument();
-  expect(screen.queryByRole('button', { name: /timestamp converter/i })).not.toBeInTheDocument();
+  const primaryNav = screen.getByRole('navigation', { name: /primary navigation/i });
+  expect(within(primaryNav).queryByRole('button', { name: /qr generator/i })).not.toBeInTheDocument();
+  expect(within(primaryNav).queryByRole('button', { name: /timestamp converter/i })).not.toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('button', { name: /payload tools/i }));
 

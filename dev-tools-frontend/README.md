@@ -17,7 +17,8 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-Backend-powered tools call `http://localhost:8000` by default. To run the Python compiler locally:
+Backend-powered tools call `http://localhost:8000` in development by default. To run the
+Python compiler locally:
 
 ```powershell
 cd ..\backend
@@ -25,6 +26,10 @@ cd ..\backend
 ```
 
 Set `REACT_APP_API_BASE_URL` if the FastAPI backend runs somewhere else.
+
+In production on Vercel, the React app calls the same domain with `/api/...`. The
+`api/index.py` FastAPI entrypoint is included in this project so `/api/python/run` and
+`/api/health` deploy with the frontend.
 
 ### `npm test`
 

@@ -1,13 +1,11 @@
 import {
   FaCode,
   FaExchangeAlt,
-  FaFingerprint,
   FaKey,
   FaLink,
   FaPlayCircle,
   FaQrcode,
   FaRandom,
-  FaSearch,
   FaClock,
   FaFileExcel,
   FaFileImage,
@@ -19,16 +17,53 @@ import {
 
 export const toolGroups = [
   {
-    id: 'files',
-    title: 'File Tools',
-    description: 'Work with PDFs, Word documents, spreadsheets, and images locally before sharing or uploading them.',
+    id: 'pdf-tools',
+    title: 'PDF Tools',
+    description: 'Merge, split, reorder, compress, and convert PDF files locally.',
     tools: [
       {
-        id: 'pdf',
+        id: 'pdfMerge',
         icon: FaFilePdf,
-        navLabel: 'PDF Merge & Split',
-        brief: 'Combine PDF files or extract selected pages without uploading sensitive documents.',
+        navLabel: 'PDF Merger',
+        brief: 'Combine two or more PDF files into one document locally.',
       },
+      {
+        id: 'pdfSplit',
+        icon: FaFilePdf,
+        navLabel: 'PDF Splitter',
+        brief: 'Select pages from a PDF and download them as a new document.',
+      },
+      {
+        id: 'reorder',
+        icon: FaFilePdf,
+        navLabel: 'PDF Page Reorder',
+        brief: 'Drag PDF pages into a new order and download the rearranged document.',
+      },
+      {
+        id: 'imagesToPdf',
+        icon: FaFileImage,
+        navLabel: 'Images to PDF',
+        brief: 'Combine JPG, PNG, and WebP images into one downloadable PDF.',
+      },
+      {
+        id: 'pdfCompress',
+        icon: FaFilePdf,
+        navLabel: 'PDF Compressor',
+        brief: 'Create an optimized, smaller PDF copy locally in your browser.',
+      },
+      {
+        id: 'pdfToImages',
+        icon: FaFileImage,
+        navLabel: 'PDF to Images',
+        brief: 'Export selected PDF pages as downloadable PNG images.',
+      },
+    ],
+  },
+  {
+    id: 'files',
+    title: 'File Tools',
+    description: 'Work with Word documents, spreadsheets, and images locally before sharing or uploading them.',
+    tools: [
       {
         id: 'image',
         icon: FaFileImage,
@@ -78,6 +113,7 @@ export const toolGroups = [
         icon: FaPlayCircle,
         navLabel: 'Python Compiler',
         brief: 'Run Python snippets through the FastAPI backend for quick logic tests and debugging work.',
+        visible: false,
       },
     ],
   },
@@ -115,7 +151,7 @@ export const toolGroups = [
   {
     id: 'generation',
     title: 'Generators and Test Helpers',
-    description: 'Generate fixtures, links, hashes, timestamps, and quick checks for everyday development.',
+    description: 'Generate QR links and fixtures for everyday development tasks.',
     tools: [
       {
         id: 'qr',
@@ -128,18 +164,6 @@ export const toolGroups = [
         icon: FaRandom,
         navLabel: 'UUID Generator',
         brief: 'Generate one or many UUIDs for payloads, seeds, fixtures, and integration testing work.',
-      },
-      {
-        id: 'hash',
-        icon: FaFingerprint,
-        navLabel: 'Hash Generator',
-        brief: 'Generate SHA-256 or SHA-512 hashes for payload checks, signatures, and integrity checks.',
-      },
-      {
-        id: 'regex',
-        icon: FaSearch,
-        navLabel: 'Regex Tester',
-        brief: 'Test regular expressions against sample text and inspect matches, groups, and flags locally.',
       },
       {
         id: 'timestamp',
@@ -163,10 +187,16 @@ export const tools = visibleToolGroups.flatMap((group) => group.tools);
 
 export const routeMap = {
   '/': 'home',
-  '/pdf-tools': 'pdf',
+  '/pdf-tools': 'pdfMerge',
+  '/pdf-merger': 'pdfMerge',
+  '/pdf-splitter': 'pdfSplit',
   '/image-compressor': 'image',
   '/spreadsheet-converter': 'spreadsheet',
   '/word-reader': 'word',
+  '/pdf-page-reorder': 'reorder',
+  '/images-to-pdf': 'imagesToPdf',
+  '/pdf-compressor': 'pdfCompress',
+  '/pdf-to-images': 'pdfToImages',
   '/text-cleaner': 'text',
   '/password-generator': 'password',
   '/json-formatter': 'json',
@@ -174,8 +204,6 @@ export const routeMap = {
   '/qr-generator': 'qr',
   '/base64-tool': 'base64',
   '/url-encoder': 'url',
-  '/hash-generator': 'hash',
-  '/regex-tester': 'regex',
   '/uuid-generator': 'uuid',
   '/python-runner': 'python',
   '/timestamp-converter': 'timestamp',
@@ -184,9 +212,15 @@ export const routeMap = {
 export const pageToPath = {
   home: '/',
   pdf: '/pdf-tools',
+  pdfMerge: '/pdf-merger',
+  pdfSplit: '/pdf-splitter',
   image: '/image-compressor',
   spreadsheet: '/spreadsheet-converter',
   word: '/word-reader',
+  reorder: '/pdf-page-reorder',
+  imagesToPdf: '/images-to-pdf',
+  pdfCompress: '/pdf-compressor',
+  pdfToImages: '/pdf-to-images',
   text: '/text-cleaner',
   password: '/password-generator',
   json: '/json-formatter',
@@ -194,8 +228,6 @@ export const pageToPath = {
   qr: '/qr-generator',
   base64: '/base64-tool',
   url: '/url-encoder',
-  hash: '/hash-generator',
-  regex: '/regex-tester',
   uuid: '/uuid-generator',
   python: '/python-runner',
   timestamp: '/timestamp-converter',

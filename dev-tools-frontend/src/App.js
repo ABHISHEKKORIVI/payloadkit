@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiChevronDown, FiHome, FiMenu, FiMoon, FiSun, FiX } from 'react-icons/fi';
+import { FiChevronDown, FiGrid, FiHome, FiMenu, FiMoon, FiSettings, FiSun, FiX } from 'react-icons/fi';
 import Base64Tool from './components/Base64Tool';
 import HashTool from './components/HashTool';
 import JsonTool from './components/JsonTool';
@@ -27,6 +27,101 @@ import { createUuidBatch } from './utils/uuid';
 
 const BRAND_NAME = 'PayloadKit';
 
+const translations = {
+  hi: {
+    preferences: 'प्राथमिकताएं',
+    pdf: 'पीडीएफ टूल्स',
+    home: 'होम',
+    settings: 'सेटिंग्स',
+    appearance: 'दिखावट',
+    appearanceHelp: 'PayloadKit का रूप चुनें।',
+    language: 'भाषा',
+    languageHelp: 'अपनी पसंदीदा भाषा चुनें।',
+    applyLanguage: 'भाषा लागू करें',
+    lightMode: 'लाइट मोड',
+    darkMode: 'डार्क मोड',
+    dashboardMenu: 'डैशबोर्ड मेनू',
+    closeSettings: 'सेटिंग्स बंद करें',
+    files: 'फाइल टूल्स',
+    everyday: 'दैनिक उपयोगिताएं',
+    runtime: 'रनटाइम टूल्स',
+    payload: 'पेलोड टूल्स',
+    generators: 'जनरेटर और टेस्ट टूल्स',
+    heroTitle: 'काम, फाइलों और विकास के लिए रोजमर्रा के टूल्स',
+    heroText: 'दस्तावेजों, फाइलों और रोजमर्रा के डेवलपर कार्यों के लिए एक केंद्रित वर्कस्पेस।',
+    toolsForWork: 'काम, फाइलों और विकास के लिए टूल्स',
+    useTool: 'टूल खोलें ->',
+    settingsNote: 'लॉगिन सपोर्ट के साथ यहां और प्राथमिकताएं जोड़ी जा सकती हैं।',
+    tools: {
+      pdf: ['पीडीएफ मर्ज और स्प्लिट', 'संवेदनशील दस्तावेज अपलोड किए बिना पीडीएफ फाइलों को मिलाएं या पेज निकालें।'],
+      pdfMerge: ['पीडीएफ मर्जर', 'दो या अधिक पीडीएफ फाइलों को एक दस्तावेज में मिलाएं।'],
+      pdfSplit: ['पीडीएफ स्प्लिटर', 'पीडीएफ से पेज चुनकर नया दस्तावेज डाउनलोड करें।'],
+      reorder: ['पीडीएफ पेज क्रम बदलें', 'पीडीएफ पेजों का क्रम बदलकर नया दस्तावेज डाउनलोड करें।'],
+      imagesToPdf: ['इमेज से पीडीएफ', 'JPG, PNG और WebP इमेज को एक पीडीएफ में मिलाएं।'],
+      pdfCompress: ['पीडीएफ कंप्रेसर', 'ब्राउज़र में स्थानीय रूप से छोटी पीडीएफ कॉपी बनाएं।'],
+      pdfToImages: ['पीडीएफ से इमेज', 'चुने हुए पीडीएफ पेजों को PNG इमेज के रूप में डाउनलोड करें।'],
+      image: ['इमेज कंप्रेसर', 'JPG, PNG और WebP इमेज का आकार और गुणवत्ता कम करें।'],
+      spreadsheet: ['स्प्रेडशीट कन्वर्टर', 'CSV और Excel फाइलों को देखें और CSV या JSON में बदलें।'],
+      word: ['वर्ड डॉक्यूमेंट रीडर', 'DOCX टेक्स्ट पढ़ें और साफ टेक्स्ट कॉपी डाउनलोड करें।'],
+      text: ['टेक्स्ट क्लीनर', 'कॉपी किए गए टेक्स्ट से अतिरिक्त स्पेस और डुप्लिकेट लाइनें हटाएं।'],
+      password: ['पासवर्ड जनरेटर', 'लंबाई और कैरेक्टर सेट के साथ मजबूत पासवर्ड बनाएं।'],
+      qr: ['क्यूआर जनरेटर', 'URL, टेक्स्ट और लिंक के लिए डाउनलोड करने योग्य QR कोड बनाएं।'],
+      uuid: ['UUID जनरेटर', 'टेस्ट और डेटा के लिए एक या कई UUID बनाएं।'],
+      json: ['JSON फॉर्मेटर', 'JSON पेलोड को फॉर्मेट, जांच और पढ़ने योग्य बनाएं।'],
+      jwt: ['JWT डिकोडर', 'ऑथ फ्लो को डीबग करते समय JWT हेडर और क्लेम देखें।'],
+      base64: ['Base64 टूल', 'टेक्स्ट को Base64 में एन्कोड या डिकोड करें।'],
+      url: ['URL एनकोडर', 'URL और क्वेरी स्ट्रिंग को एन्कोड या डिकोड करें।'],
+    },
+  },
+  es: {
+    preferences: 'Preferencias',
+    pdf: 'Herramientas PDF',
+    home: 'Inicio',
+    settings: 'Configuración',
+    appearance: 'Apariencia',
+    appearanceHelp: 'Elige el aspecto de PayloadKit.',
+    language: 'Idioma',
+    languageHelp: 'Elige tu idioma preferido.',
+    applyLanguage: 'Aplicar idioma',
+    lightMode: 'Modo claro',
+    darkMode: 'Modo oscuro',
+    dashboardMenu: 'Menú del panel',
+    closeSettings: 'Cerrar configuración',
+    files: 'Herramientas de archivos',
+    everyday: 'Utilidades diarias',
+    runtime: 'Herramientas de ejecución',
+    payload: 'Herramientas de payload',
+    generators: 'Generadores y pruebas',
+    heroTitle: 'Herramientas diarias para trabajo, archivos y desarrollo',
+    heroText: 'Un espacio de trabajo enfocado para documentos, archivos y tareas de desarrollo.',
+    toolsForWork: 'Herramientas para trabajo, archivos y desarrollo',
+    useTool: 'Abrir herramienta ->',
+    settingsNote: 'Aquí se añadirán más preferencias con el soporte de inicio de sesión.',
+    tools: {
+      pdf: ['Unir y dividir PDF', 'Combina archivos PDF o extrae páginas sin subir documentos sensibles.'],
+      pdfMerge: ['Unir PDF', 'Combina dos o más archivos PDF en un documento.'],
+      pdfSplit: ['Dividir PDF', 'Selecciona páginas de un PDF y descarga un documento nuevo.'],
+      reorder: ['Reordenar páginas PDF', 'Cambia el orden de las páginas y descarga el nuevo documento.'],
+      imagesToPdf: ['Imágenes a PDF', 'Combina imágenes JPG, PNG y WebP en un PDF.'],
+      pdfCompress: ['Compresor de PDF', 'Crea una copia PDF más pequeña directamente en el navegador.'],
+      pdfToImages: ['PDF a imágenes', 'Descarga páginas PDF seleccionadas como imágenes PNG.'],
+      image: ['Compresor de imágenes', 'Reduce el tamaño y la calidad de imágenes JPG, PNG y WebP.'],
+      spreadsheet: ['Conversor de hojas de cálculo', 'Convierte archivos CSV y Excel a CSV o JSON.'],
+      word: ['Lector de documentos Word', 'Lee archivos DOCX y descarga una copia de texto limpio.'],
+      text: ['Limpiador de texto', 'Elimina espacios adicionales y líneas duplicadas del texto copiado.'],
+      password: ['Generador de contraseñas', 'Crea contraseñas seguras con longitud y caracteres configurables.'],
+      qr: ['Generador de QR', 'Crea códigos QR descargables para URL, texto y enlaces.'],
+      uuid: ['Generador de UUID', 'Genera uno o varios UUID para pruebas y datos.'],
+      json: ['Formateador JSON', 'Formatea, valida y revisa payloads JSON.'],
+      jwt: ['Decodificador JWT', 'Inspecciona encabezados y claims JWT.'],
+      base64: ['Herramienta Base64', 'Codifica o decodifica texto en Base64.'],
+      url: ['Codificador URL', 'Codifica o decodifica URL y cadenas de consulta.'],
+    },
+  },
+};
+
+const getText = (language, key, fallback) => translations[language]?.[key] || fallback;
+
 const defaultJsonInput =
   '{\n  "project": "PayloadKit",\n  "visibility": "public",\n  "tools": ["JSON", "JWT", "QR", "Base64"]\n}';
 const defaultJwtInput =
@@ -48,6 +143,18 @@ print("Average:", average)
 function App() {
   const [activePage, setActivePage] = useState(() => routeMap[window.location.pathname] || 'home');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [language, setLanguage] = useState(() => window.localStorage.getItem('payloadkit-language') || 'en');
+  const [pendingLanguage, setPendingLanguage] = useState(() => window.localStorage.getItem('payloadkit-language') || 'en');
+  const text = (key, fallback) => getText(language, key, fallback);
+  const localizedToolGroups = visibleToolGroups.map((group) => ({
+    ...group,
+    title: text({ 'pdf-tools': 'pdf', files: 'files', everyday: 'everyday', backend: 'runtime', payload: 'payload', generation: 'generators' }[group.id], group.title),
+    tools: group.tools.map((tool) => ({
+      ...tool,
+      navLabel: translations[language]?.tools?.[tool.id]?.[0] || tool.navLabel,
+      brief: translations[language]?.tools?.[tool.id]?.[1] || tool.brief,
+    })),
+  }));
 
   const [jsonInput, setJsonInput] = useState(defaultJsonInput);
   const [formattedJson, setFormattedJson] = useState(() => formatJsonValue(defaultJsonInput));
@@ -100,7 +207,10 @@ function App() {
   const [copyStatus, setCopyStatus] = useState('');
   const [openMenuId, setOpenMenuId] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUtilityMenuOpen, setIsUtilityMenuOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const navRef = useRef(null);
+  const utilityMenuRef = useRef(null);
 
   const runCopy = async (value, label) => {
     try {
@@ -332,6 +442,16 @@ function App() {
   }, [isDarkMode]);
 
   useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
+  const applyLanguage = () => {
+    setLanguage(pendingLanguage);
+    window.localStorage.setItem('payloadkit-language', pendingLanguage);
+    setIsSettingsOpen(false);
+  };
+
+  useEffect(() => {
     try {
       setFormattedJson(formatJsonValue(jsonInput));
       setJsonError('');
@@ -371,8 +491,9 @@ function App() {
 
   useEffect(() => {
     const handlePointerDown = (event) => {
-      if (!navRef.current?.contains(event.target)) {
+      if (!navRef.current?.contains(event.target) && !utilityMenuRef.current?.contains(event.target)) {
         setOpenMenuId('');
+        setIsUtilityMenuOpen(false);
       }
     };
 
@@ -401,61 +522,21 @@ function App() {
     setActivePage(page);
     setOpenMenuId('');
     setIsMobileMenuOpen(false);
+    setIsUtilityMenuOpen(false);
   };
 
   const renderHome = () => (
     <section className="home-page">
       <div className="hero-copy home-hero">
-        <h1>All your dev tools One clean workspace</h1>
+        <h1>{text('heroTitle', 'Everyday tools for work, files, and development')}</h1>
         <p className="hero-text">
-          A focused browser workspace for everyday developer tasks.
-          Built to keep debugging, payload handling, and quick utility work fast, simple, and clean.
+          {text('heroText', 'A focused workspace for documents, files, and everyday developer tasks.')}
         </p>
-        <p className="trust-line">Client-first utilities with backend power where it helps. No data stored</p>
-        <div className="hero-actions">
-          <button type="button" onClick={() => navigateTo('json')}>
-            Start Using Tools
-          </button>
-          <button
-            type="button"
-            className="secondary-button"
-            onClick={() =>
-              document.getElementById('tools-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }
-          >
-            Explore Tools
-          </button>
-        </div>
-      </div>
-
-      <div className="why-section">
-        <div className="section-heading">
-          <h2>Why PayloadKit?</h2>
-        </div>
-        <div className="why-grid">
-          <article className="why-card">
-            <h3>Fast and lightweight</h3>
-            <p>Quick utilities that open instantly and stay focused on the task.</p>
-          </article>
-          <article className="why-card">
-            <h3>Privacy focused</h3>
-            <p>Your input stays in the browser for safer everyday developer workflows.</p>
-          </article>
-          <article className="why-card">
-            <h3>Designed for developers</h3>
-            <p>Useful tools for payloads, tokens, QR sharing, and encoding work in one place.</p>
-          </article>
-        </div>
       </div>
 
       <div className="cards-section" id="tools-section">
-        <div className="section-heading">
-          <h2>Tools</h2>
-          <p>Explore a focused set of browser-based utilities for everyday developer tasks</p>
-        </div>
-
         <div className="tool-group-list">
-          {visibleToolGroups.map((group) => (
+          {localizedToolGroups.map((group) => (
             <section
               className={group.id === 'backend' ? 'tool-group tool-group--compact' : 'tool-group'}
               key={group.id}
@@ -463,7 +544,6 @@ function App() {
             >
               <div className="tool-group-heading">
                 <h3 id={`${group.id}-tools`}>{group.title}</h3>
-                <p>{group.description}</p>
               </div>
               <div className="hero-grid">
                 {group.tools.map((tool) => (
@@ -478,7 +558,7 @@ function App() {
                     </span>
                     <h2>{tool.navLabel}</h2>
                     <p>{tool.brief}</p>
-                    <span className="card-link">Use Tool -&gt;</span>
+                    <span className="card-link">{text('useTool', 'Use Tool -&gt;')}</span>
                   </button>
                 ))}
               </div>
@@ -492,17 +572,29 @@ function App() {
   const renderPage = () => {
     switch (activePage) {
       case 'pdf':
-        return <UtilityTool type="pdf" />;
+        return <UtilityTool type="pdf" language={language} />;
+      case 'pdfMerge':
+        return <UtilityTool type="pdfMerge" language={language} />;
+      case 'pdfSplit':
+        return <UtilityTool type="pdfSplit" language={language} />;
       case 'image':
-        return <UtilityTool type="image" />;
+        return <UtilityTool type="image" language={language} />;
       case 'spreadsheet':
-        return <UtilityTool type="spreadsheet" />;
+        return <UtilityTool type="spreadsheet" language={language} />;
       case 'word':
-        return <UtilityTool type="word" />;
+        return <UtilityTool type="word" language={language} />;
+      case 'reorder':
+        return <UtilityTool type="reorder" language={language} />;
+      case 'imagesToPdf':
+        return <UtilityTool type="imagesToPdf" language={language} />;
+      case 'pdfCompress':
+        return <UtilityTool type="pdfCompress" language={language} />;
+      case 'pdfToImages':
+        return <UtilityTool type="pdfToImages" language={language} />;
       case 'text':
-        return <UtilityTool type="text" />;
+        return <UtilityTool type="text" language={language} />;
       case 'password':
-        return <UtilityTool type="password" />;
+        return <UtilityTool type="password" language={language} />;
       case 'json':
         return (
           <JsonTool
@@ -659,12 +751,15 @@ function App() {
             >
               <FiHome aria-hidden="true" />
             </button>
-            {visibleToolGroups.map((group) => {
+            {localizedToolGroups.map((group) => {
               const isGroupActive = group.tools.some((tool) => tool.id === activePage);
               const isOpen = openMenuId === group.id;
 
               return (
-                <div className="nav-menu" key={group.id}>
+                <div
+                  className="nav-menu"
+                  key={group.id}
+                >
                   <button
                     type="button"
                     className={isGroupActive ? 'nav-link nav-menu-trigger active' : 'nav-link nav-menu-trigger'}
@@ -703,30 +798,51 @@ function App() {
           </nav>
         </div>
 
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={() => setIsDarkMode((current) => !current)}
-          aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-          title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
-          <span className="theme-toggle-icon" aria-hidden="true">
-            <FiMoon
-              className={isDarkMode ? 'theme-toggle-glyph theme-toggle-glyph--hidden theme-toggle-glyph--moon' : 'theme-toggle-glyph theme-toggle-glyph--visible theme-toggle-glyph--moon'}
-            />
-            <FiSun
-              className={isDarkMode ? 'theme-toggle-glyph theme-toggle-glyph--visible theme-toggle-glyph--sun' : 'theme-toggle-glyph theme-toggle-glyph--hidden theme-toggle-glyph--sun'}
-            />
-          </span>
-          <span className="theme-toggle-label" key={isDarkMode ? 'light' : 'dark'}>
-            {isDarkMode ? 'Light' : 'Dark'}
-          </span>
-        </button>
+        <div className="utility-menu" ref={utilityMenuRef}>
+          <button
+            type="button"
+            className="utility-menu-toggle"
+            onClick={() => setIsUtilityMenuOpen((current) => !current)}
+            aria-label={text('dashboardMenu', 'Open dashboard menu')}
+            aria-expanded={isUtilityMenuOpen}
+            aria-haspopup="menu"
+            title="Dashboard menu"
+          >
+            <FiGrid aria-hidden="true" />
+          </button>
+          {isUtilityMenuOpen ? (
+            <div className="utility-menu-dropdown" role="menu" aria-label={text('dashboardMenu', 'Dashboard menu')}>
+              <button
+                type="button"
+                className="theme-toggle"
+                onClick={() => setIsDarkMode((current) => !current)}
+                aria-label={isDarkMode ? text('lightMode', 'Switch to light mode') : text('darkMode', 'Switch to dark mode')}
+                role="menuitem"
+              >
+                <span className="theme-toggle-icon" aria-hidden="true">
+                  <FiMoon
+                    className={isDarkMode ? 'theme-toggle-glyph theme-toggle-glyph--hidden theme-toggle-glyph--moon' : 'theme-toggle-glyph theme-toggle-glyph--visible theme-toggle-glyph--moon'}
+                  />
+                  <FiSun
+                    className={isDarkMode ? 'theme-toggle-glyph theme-toggle-glyph--visible theme-toggle-glyph--sun' : 'theme-toggle-glyph theme-toggle-glyph--hidden theme-toggle-glyph--sun'}
+                  />
+                </span>
+                <span className="theme-toggle-label" key={isDarkMode ? 'light' : 'dark'}>
+                  {isDarkMode ? text('lightMode', 'Light theme') : text('darkMode', 'Dark theme')}
+                </span>
+              </button>
+              <button type="button" className="utility-menu-home" onClick={() => { setIsSettingsOpen(true); setIsUtilityMenuOpen(false); }} role="menuitem">
+                <FiSettings aria-hidden="true" />
+                <span>{text('settings', 'Settings')}</span>
+              </button>
+            </div>
+          ) : null}
+        </div>
       </header>
 
       <div className={isMobileMenuOpen ? 'mobile-nav-drawer mobile-nav-drawer--open' : 'mobile-nav-drawer'} id="mobile-nav-drawer">
         <div className="mobile-nav-groups">
-          {visibleToolGroups.map((group) => (
+          {localizedToolGroups.map((group) => (
             <section className="mobile-nav-group" key={group.id} aria-labelledby={`${group.id}-mobile-nav`}>
               <h3 id={`${group.id}-mobile-nav`}>{group.title}</h3>
               <div className="mobile-nav-tools">
@@ -752,6 +868,34 @@ function App() {
         </div>
       </div>
 
+      {isSettingsOpen ? (
+        <div className="settings-backdrop" role="presentation" onMouseDown={() => setIsSettingsOpen(false)}>
+          <section className="settings-dialog" role="dialog" aria-modal="true" aria-labelledby="settings-title" onMouseDown={(event) => event.stopPropagation()}>
+            <div className="settings-dialog-header">
+              <div>
+                <p className="panel-kicker">{text('preferences', 'Preferences')}</p>
+                <h2 id="settings-title">{text('settings', 'Settings')}</h2>
+              </div>
+              <button type="button" className="settings-close-button" onClick={() => setIsSettingsOpen(false)} aria-label={text('closeSettings', 'Close settings')}><FiX aria-hidden="true" /></button>
+            </div>
+            <div className="settings-row">
+              <div><strong>{text('appearance', 'Appearance')}</strong><p>{text('appearanceHelp', 'Choose how PayloadKit looks.')}</p></div>
+              <button type="button" className="settings-theme-button" onClick={() => setIsDarkMode((current) => !current)}>{isDarkMode ? text('darkMode', 'Dark mode') : text('lightMode', 'Light mode')}</button>
+            </div>
+            <div className="settings-row">
+              <div><strong>{text('language', 'Language')}</strong><p>{text('languageHelp', 'Choose your preferred language.')}</p></div>
+              <select className="settings-language-select" value={pendingLanguage} onChange={(event) => setPendingLanguage(event.target.value)} aria-label="Language">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="es">Spanish</option>
+              </select>
+            </div>
+            <button type="button" className="settings-apply-button" onClick={applyLanguage} disabled={pendingLanguage === language}>{text('applyLanguage', 'Apply language')}</button>
+            <p className="settings-note">{text('settingsNote', 'More preferences, saved tools, and account settings can be added here with login support.')}</p>
+          </section>
+        </div>
+      ) : null}
+
       <main className="app-content">
         {copyStatus ? <p className="status-banner">{copyStatus}</p> : null}
         {renderPage()}
@@ -759,7 +903,7 @@ function App() {
 
       <footer className="site-footer">
         <p>&copy; 2026 PayloadKit</p>
-        <p>Built for developers</p>
+        <p>{text('toolsForWork', 'Tools for work, files, and development')}</p>
       </footer>
     </div>
   );

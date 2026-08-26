@@ -22,10 +22,7 @@ test('renders the public home page and opens a tool page', async () => {
 
   expect(screen.getByRole('button', { name: /payloadkit/i })).toBeInTheDocument();
   expect(
-    screen.getByRole('heading', { name: /all your dev tools one clean workspace/i })
-  ).toBeInTheDocument();
-  expect(
-    screen.getByText(/client-first utilities with backend power where it helps\. no data stored/i)
+    screen.getByRole('heading', { name: /everyday tools for work, files, and development/i })
   ).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: /why payloadkit/i })).toBeInTheDocument();
   expect(screen.getAllByRole('heading', { name: /runtime tools/i }).length).toBeGreaterThan(0);
